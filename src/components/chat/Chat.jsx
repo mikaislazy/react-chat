@@ -9,17 +9,32 @@ import SendIcon from "@mui/icons-material/Send";
 import EmojiEmotionsIcon from "@mui/icons-material/EmojiEmotions";
 import EmojiPicker from "emoji-picker-react";
 import { useEffect, useState, useRef } from "react";
+import { doc, onSnapshot } from "firebase/firestore";
+import { db } from "../../lib/firebase";
+import { useChatStore } from "../../lib/chatStore";
 
 const Chat = () => {
   const [open, setOpen] = useState(false);
+  const [chat, setChat] = useState();
   const [text, setText] = useState("");
-
+  const { chatId } = useChatStore();
   const endRef = useRef(null);
 
   useEffect(() => {
     endRef.current.scrollIntoView({ behavior: "smooth" });
-  });
+  }, []);
 
+  useEffect(() => {
+    const unSub = onSnapshot(doc(db, "chats", chatId), (res) => {
+      setChat(res.data());
+    });
+
+    return () => {
+      unSub();
+    };
+  }, [chatId]);
+
+  console.log(JSON.stringify(chat));
   return (
     <div className="chat">
       <div className="top">

@@ -3,6 +3,7 @@ import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import DownloadIcon from "@mui/icons-material/Download";
 import BlockIcon from "@mui/icons-material/Block";
+import { auth } from "../../lib/firebase";
 const Detail = () => {
   return (
     <div className="detail">
@@ -72,7 +73,9 @@ const Detail = () => {
           </div>
         </div>
         <button>Block User</button>
-        <button className="logout">Log Out</button>
+        <button className="logout" onClick={() => auth.signOut()}>
+          Log Out
+        </button>
       </div>
     </div>
   );

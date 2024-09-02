@@ -73,7 +73,7 @@ const Login = () => {
         <h2>Welcome back, </h2>
         <form onSubmit={handleLogin}>
           <input type="text" placeholder="Email" name="email" />
-          <input type="text" placeholder="Password" name="password" />
+          <input type="password" placeholder="Password" name="password" />
           <button disabled={loading}>{loading ? "Loading" : "Sign In"}</button>
         </form>
       </div>
@@ -93,7 +93,7 @@ const Login = () => {
           </label>
           <input type="text" placeholder="Username" name="username" />
           <input type="text" placeholder="Email" name="email" />
-          <input type="text" placeholder="Password" name="password" />
+          <input type="password" placeholder="Password" name="password" />
           <button disabled={loading}>{loading ? "Loading" : "Sign Up"}</button>
         </form>
       </div>
