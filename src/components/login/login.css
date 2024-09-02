@@ -51,6 +51,11 @@
         color: white;
         border-radius: 5px;
         cursor: pointer;
+
+        &:disabled {
+          background-color: grey;
+          cursor: not-allowed;
+        }
       }
     }
   }
