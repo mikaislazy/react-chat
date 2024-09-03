@@ -16,14 +16,14 @@ const Login = () => {
     url: "",
   });
   const [loading, setLoading] = useState(false);
-  function handleAvatar(e) {
+  const handleAvatar = (e) => {
     if (e.target.files[0]) {
       setAvatar({
         file: e.target.files[0],
         url: URL.createObjectURL(e.target.files[0]),
       });
     }
-  }
+  };
   const handleLogin = async (e) => {
     e.preventDefault();
     setLoading(true);

@@ -14,6 +14,19 @@
     align-items: center;
     padding: 10px;
     justify-content: space-between;
+
+    button {
+      border: none;
+      background-color: rgba(0, 0, 0, 0.178);
+      cursor: pointer;
+      border-radius: 10px;
+      .add,
+      .minus {
+        padding: 10px;
+        border-radius: 10px;
+        cursor: pointer;
+      }
+    }
   }
 
   .searchBar {
@@ -33,20 +46,6 @@
     width: 100%;
     background-color: transparent;
     color: white;
-  }
-  .add,
-  .minus {
-    padding: 10px;
-    cursor: pointer;
-    background-color: rgba(0, 0, 0, 0.178);
-    border-radius: 10px;
-  }
-
-  .minus {
-    padding: 10px;
-    cursor: pointer;
-    background-color: rgba(0, 0, 0, 0.178);
-    border-radius: 50%;
   }
 
   .item {

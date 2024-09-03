@@ -106,7 +106,9 @@
     justify-content: space-between;
   }
   .bottom .icons {
-    cursor: pointer;
+    .icon {
+      cursor: pointer;
+    }
   }
   .bottom input {
     flex: 1;
@@ -115,12 +117,20 @@
     font-size: 16px;
     border-radius: 10px;
     padding: 10px;
+    &:disabled {
+      color: gray;
+      cursor: not-allowed;
+    }
   }
   .bottom .sendBtn {
     cursor: pointer;
-    /* background-color: rgb(52, 168, 221); */
+    background-color: transparent;
     color: white;
     border: none;
+    &:disabled {
+      color: gray;
+      cursor: not-allowed;
+    }
   }
   .bottom .emojis {
     position: relative;

@@ -9,17 +9,27 @@ import SendIcon from "@mui/icons-material/Send";
 import EmojiEmotionsIcon from "@mui/icons-material/EmojiEmotions";
 import EmojiPicker from "emoji-picker-react";
 import { useEffect, useState, useRef } from "react";
-import { doc, onSnapshot } from "firebase/firestore";
+import {
+  arrayUnion,
+  doc,
+  getDoc,
+  onSnapshot,
+  updateDoc,
+} from "firebase/firestore";
 import { db } from "../../lib/firebase";
 import { useChatStore } from "../../lib/chatStore";
+import { useUserStore } from "../../lib/userStore";
+import upload from "../../lib/upload/upload";
 
 const Chat = () => {
   const [open, setOpen] = useState(false);
-  const [chat, setChat] = useState();
+  const [chat, setChat] = useState(null);
   const [text, setText] = useState("");
-  const { chatId } = useChatStore();
+  const { chatId, user, isCurrentUserBlocked, isReceiverBlocked } =
+    useChatStore();
+  const { currentUser } = useUserStore();
+  const [img, setImg] = useState({ file: null, url: "" });
   const endRef = useRef(null);
-
   useEffect(() => {
     endRef.current.scrollIntoView({ behavior: "smooth" });
   }, []);
@@ -33,15 +43,70 @@ const Chat = () => {
       unSub();
     };
   }, [chatId]);
+  const handleImg = (e) => {
+    if (e.target.files[0]) {
+      setImg({
+        file: e.target.files[0],
+        url: URL.createObjectURL(e.target.files[0]),
+      });
+    }
+  };
 
-  console.log(JSON.stringify(chat));
+  const handleSend = async () => {
+    console.log("send" + text);
+
+    if (text === "") return;
+
+    let imgUrl = null;
+
+    try {
+      if (img.file) {
+        imgUrl = await upload(img.file);
+      }
+      await updateDoc(doc(db, "chats", chatId), {
+        messages: arrayUnion({
+          senderId: currentUser.id,
+          text: text,
+          ...(imgUrl && { img: imgUrl }),
+          createAt: new Date(),
+        }),
+      });
+
+      const userIDs = [currentUser.id, user.id];
+
+      userIDs.forEach(async (id) => {
+        const userChatRef = doc(db, "userchats", id);
+        const userChatSnap = await getDoc(userChatRef);
+
+        if (userChatSnap.exists()) {
+          const userChatData = userChatSnap.data();
+          const chatIndex = userChatData.chats.findIndex(
+            (chat) => chat.chatId === chatId
+          );
+
+          userChatData.chats[chatIndex].lastMessage = text;
+          userChatData.chats[chatIndex].isSeen =
+            id === currentUser.id ? true : false;
+          userChatData.chats[chatIndex].udpatedAt = Date.now();
+
+          await updateDoc(userChatRef, { chats: userChatData.chats });
+        }
+      });
+    } catch (error) {
+      console.log(error);
+    }
+    setText("");
+    setImg({ file: null, url: "" });
+  };
+  console.log("user " + JSON.stringify(user));
+
   return (
     <div className="chat">
       <div className="top">
         <div className="user">
-          <img src="./avatar.png" alt="" />
+          <img src={user?.avatar || "./avatar.png"} alt="" />
           <div className="texts">
-            <span>Jacky</span>
+            <span>{user?.username || "User"}</span>
             <p>Hi, thanks for order a bababa</p>
           </div>
         </div>
@@ -52,59 +117,50 @@ const Chat = () => {
         </div>
       </div>
       <div className="center">
-        <div className="message">
-          <img src="./avatar.png" alt="" />
-          <div className="texts">
-            <p>
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam
-              sodales velit eget mi volutpat, ut pulvinar erat ullamcorper. Sed
-              vestibulum, nisi non commodo scelerisque, nulla metus convallis
-              eros, at pharetra elit metus id arcu. Etiam eget mauris a est
-              lobortis finibus et non tellus. Etiam sagittis nisi ut ante
-              facilisis semper. Duis id nulla cursus, bibendum lacus sit amet,
-              aliquam mi. Phasellus volutpat porta ante a aliquet. Praesent
-              tristique velit a elementum eleifend. Sed malesuada blandit ipsum.
-              Maecenas dapibus tempus semper. Nulla pretium fringilla
-              ullamcorper
-            </p>
-            <span>1 min ago</span>
+        {chat?.messages?.map((message) => (
+          <div
+            className={`message ${
+              message.senderId === currentUser?.id && "own"
+            }`}
+            key={message?.createAt}
+          >
+            <div className="texts">
+              {message.img && <img src={message.img} alt="" />}
+              <p>{message.text}</p>
+            </div>
           </div>
-        </div>
-        <div className="message own">
-          <div className="texts">
-            <p>
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam
-              sodales velit eget mi volutpat, ut pulvinar erat ullamcorper. Sed
-              vestibulum, nisi non commodo scelerisque, nulla metus convallis
-              eros, at pharetra elit metus id arcu. Etiam eget mauris a est
-              lobortis finibus et non tellus. Etiam sagittis nisi ut ante
-              facilisis semper. Duis id nulla cursus, bibendum lacus sit amet,
-              aliquam mi. Phasellus volutpat porta ante a aliquet. Praesent
-              tristique velit a elementum eleifend. Sed malesuada blandit ipsum.
-              Maecenas dapibus tempus semper. Nulla pretium fringilla
-              ullamcorper
-            </p>
-            <span>1 min ago</span>
+        ))}
+
+        {img.url && (
+          <div className="message own">
+            <div className="texts">
+              {img.url && <img src={img.url} alt="" />}
+            </div>
           </div>
-        </div>
-        <div className="message own">
-          <div className="texts">
-            <img
-              src="https://www.capcom-games.com/megaman/exe/assets/images/top/first-view_main.png"
-              alt=""
-            />
-            <span>1 min ago</span>
-          </div>
-        </div>
+        )}
       </div>
       <div ref={endRef}></div>
       <div className="bottom">
         <div className="icons">
-          <ImageIcon fontSize="medium" />
-          <CameraAltIcon fontSize="medium" />
-          <MicIcon fontSize="medium" />
+          <label htmlFor="file">
+            <ImageIcon fontSize="medium" className="icon" />
+            <input
+              type="file"
+              id="file"
+              style={{ display: "none " }}
+              onChange={handleImg}
+            />
+          </label>
+          <CameraAltIcon fontSize="medium" className="icon" />
+          <MicIcon fontSize="medium" className="icon" />
         </div>
-        <input type="text" placeholder="Type a message" />
+        <input
+          type="text"
+          placeholder="Type a message"
+          value={text}
+          onChange={(e) => setText(e.target.value)}
+          disabled={isCurrentUserBlocked || isReceiverBlocked}
+        />
         <div className="emojis">
           <EmojiEmotionsIcon
             onClick={() => setOpen(!open)}
@@ -114,7 +170,13 @@ const Chat = () => {
             <EmojiPicker open={open} />
           </div>
         </div>
-        <SendIcon className="sendBtn" fontSize="medium" />
+        <button
+          className="sendBtn"
+          onClick={handleSend}
+          disabled={isCurrentUserBlocked || isReceiverBlocked}
+        >
+          <SendIcon fontSize="medium" />
+        </button>
       </div>
     </div>
   );
