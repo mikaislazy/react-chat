@@ -5,8 +5,19 @@
   justify-content: space-between;
   .user {
     display: flex;
-    align-items: center;
+    flex-direction: column;
     gap: 10px;
+    .detail {
+      display: flex;
+      align-items: center;
+      flex-direction: row;
+      gap: 10px;
+    }
+    .quote {
+      p {
+        font-style: italic;
+      }
+    }
   }
   .user img {
     width: 50px;
@@ -18,7 +29,8 @@
     display: flex;
     justify-content: space-between;
   }
-  .icon {
+
+  .user .icon {
     padding: 5px;
     cursor: pointer;
   }

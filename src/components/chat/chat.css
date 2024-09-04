@@ -37,6 +37,7 @@
     font-size: 14px;
     font-weight: 300;
     color: rgb(204, 195, 195);
+    font-style: italic;
   }
   .top .icons {
     display: flex;

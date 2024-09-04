@@ -98,8 +98,10 @@ const Chat = () => {
     setText("");
     setImg({ file: null, url: "" });
   };
-  console.log("user " + JSON.stringify(user));
-
+  const handleEmojiClick = (e, emojiObject) => {
+    setText((prevText) => prevText + e.emoji);
+    console.log(e);
+  };
   return (
     <div className="chat">
       <div className="top">
@@ -107,7 +109,7 @@ const Chat = () => {
           <img src={user?.avatar || "./avatar.png"} alt="" />
           <div className="texts">
             <span>{user?.username || "User"}</span>
-            <p>Hi, thanks for order a bababa</p>
+            <p>{user?.quote}</p>
           </div>
         </div>
         <div className="icons">
@@ -167,7 +169,7 @@ const Chat = () => {
             className="emojiIcon"
           />
           <div className="emojiPicker">
-            <EmojiPicker open={open} />
+            <EmojiPicker open={open} onEmojiClick={handleEmojiClick} />
           </div>
         </div>
         <button
