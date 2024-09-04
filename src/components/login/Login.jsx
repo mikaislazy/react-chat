@@ -55,6 +55,7 @@ const Login = () => {
         id: res.user.uid,
         block: [],
         avatar: imgUrl,
+        quote: "",
       });
       await setDoc(doc(db, "userchats", res.user.uid), {
         chats: [],

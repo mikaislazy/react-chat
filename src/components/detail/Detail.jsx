@@ -29,68 +29,11 @@ const Detail = () => {
       <div className="user">
         <img src={user?.avatar || "./avatar.png"} alt="" />
         <h2>{user?.username}</h2>
-        <p>
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Pariatur
-          culpa voluptatibus totam. .
-        </p>
+        <div className="quote">
+          <p>{user?.quote}</p>
+        </div>
       </div>
       <div className="info">
-        <div className="option">
-          <div className="title">
-            <span>Chat Setting</span>
-            <KeyboardArrowUpIcon className="arrowIcon" fontSize="large" />
-          </div>
-        </div>
-        <div className="option">
-          <div className="title">
-            <span>Privacy & Help</span>
-            <KeyboardArrowUpIcon className="arrowIcon" fontSize="large" />
-          </div>
-        </div>
-        <div className="option">
-          <div className="title">
-            <span>Shared Photos</span>
-            <KeyboardArrowDownIcon className="arrowIcon" fontSize="large" />
-          </div>
-          <div className="photos">
-            <div className="photoItem">
-              <div className="photoDetail">
-                <img
-                  src="https://www.capcom-games.com/megaman/exe/assets/images/top/first-view_main.png"
-                  alt=""
-                />
-                <span>randomText.png</span>
-              </div>
-              <DownloadIcon fontSize="large" className="downIcon" />
-            </div>
-            <div className="photoItem">
-              <div className="photoDetail">
-                <img
-                  src="https://www.capcom-games.com/megaman/exe/assets/images/top/first-view_main.png"
-                  alt=""
-                />
-                <span>randomText.png</span>
-              </div>
-              <DownloadIcon fontSize="large" className="downIcon" />
-            </div>
-            <div className="photoItem">
-              <div className="photoDetail">
-                <img
-                  src="https://www.capcom-games.com/megaman/exe/assets/images/top/first-view_main.png"
-                  alt=""
-                />
-                <span>randomText.png</span>
-              </div>
-              <DownloadIcon fontSize="large" className="downIcon" />
-            </div>
-          </div>
-        </div>
-        <div className="option">
-          <div className="title">
-            <span>Shared File</span>
-            <KeyboardArrowDownIcon className="arrowIcon" fontSize="large" />
-          </div>
-        </div>
         <button onClick={handleBlock}>
           {isCurrentUserBlocked
             ? " Your are blocked"

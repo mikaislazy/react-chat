@@ -90,4 +90,12 @@
       }
     }
   }
+  .quote {
+    .icon {
+      cursor: pointer;
+    }
+    p {
+      font-style: italic;
+    }
+  }
 }
