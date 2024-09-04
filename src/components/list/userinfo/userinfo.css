@@ -1,0 +1,37 @@
+.userInfo {
+  padding: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  .user {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    .detail {
+      display: flex;
+      align-items: center;
+      flex-direction: row;
+      gap: 10px;
+    }
+    .quote {
+      p {
+        font-style: italic;
+      }
+    }
+  }
+  .user img {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    object-fit: cover;
+  }
+  .icons {
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .user .icon {
+    padding: 5px;
+    cursor: pointer;
+  }
+}
